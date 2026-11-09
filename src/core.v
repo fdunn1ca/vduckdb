@@ -290,6 +290,9 @@ pub fn (d DuckDB) print_table(o OutputConfig) string {
 	} else {
 		math.min(d.num_rows, o.max_rows)
 	}
+	if limit == 0 {
+		return ''
+	}
 	data := d.get_array_as_string()
 	out := if o.mode == 'csv' {
 		headers := data[0].keys().join(o.delimiter)

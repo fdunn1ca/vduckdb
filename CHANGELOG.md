@@ -1,5 +1,10 @@
 # Changelog
 
+## version 0.7.1
+
+- libduckdb is also looked up in the executable's own directory
+- `print_table` returns an empty string when there are no rows to print
+
 ## version 0.7.0
 
 - Added support for arrays without casting explicitly

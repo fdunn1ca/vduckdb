@@ -1,4 +1,4 @@
-# vduckdb 0.7.0
+# vduckdb 0.7.1
 
 [![CI](https://github.com/rodabt/vduckdb/workflows/Build%20and%20Test/badge.svg)](https://github.com/rodabt/vduckdb/actions)
 
