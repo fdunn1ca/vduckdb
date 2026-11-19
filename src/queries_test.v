@@ -1,6 +1,7 @@
 module vduckdb
 
 import x.json2
+import os
 
 fn test__simple_query() {
 	mut db := DuckDB{}
@@ -50,7 +51,7 @@ fn test__out_data_table() {
 
 fn test__array() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select x,y from tdata')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -59,7 +60,7 @@ fn test__array() {
 
 fn test__uuid() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select id, name from test_uuid order by name')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -71,7 +72,7 @@ fn test__uuid() {
 
 fn test__uuid_json() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select id, name from test_uuid order by name limit 1')!
 	res := vdb.get_array()
 	vdb.close()
@@ -83,7 +84,7 @@ fn test__uuid_json() {
 
 fn test__boolean() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select flag from test_bool order by id')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -94,7 +95,7 @@ fn test__boolean() {
 
 fn test__boolean_json() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select flag from test_bool order by id limit 1')!
 	res := vdb.get_array()
 	vdb.close()
@@ -105,7 +106,7 @@ fn test__boolean_json() {
 
 fn test__numeric_types() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select tiny_val, small_val, big_val, float_val, double_val from test_numeric')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -117,7 +118,7 @@ fn test__numeric_types() {
 
 fn test__numeric_json() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select tiny_val, small_val, big_val, double_val from test_numeric')!
 	res := vdb.get_array()
 	vdb.close()
@@ -133,7 +134,7 @@ fn test__numeric_json() {
 
 fn test__decimal() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select amount from test_decimal order by id')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -143,7 +144,7 @@ fn test__decimal() {
 
 fn test__decimal_json() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select amount from test_decimal limit 1')!
 	res := vdb.get_array()
 	vdb.close()
@@ -154,7 +155,7 @@ fn test__decimal_json() {
 
 fn test__date() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select dt from test_date order by id')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -164,7 +165,7 @@ fn test__date() {
 
 fn test__timestamp() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select ts from test_timestamp')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -174,7 +175,7 @@ fn test__timestamp() {
 
 fn test__mixed_types() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select id, name, score, active from test_mixed order by id')!
 	res := vdb.get_array_as_string()
 	vdb.close()
@@ -187,7 +188,7 @@ fn test__mixed_types() {
 
 fn test__mixed_types_json() {
 	mut vdb := DuckDB{}
-	_ := vdb.open('/home/rabt/devel/vduckdb/src/testdata/test.db')!
+	_ := vdb.open(database_path())!
 	_ := vdb.query('select id, name, score, active from test_mixed order by id limit 1')!
 	res := vdb.get_array()
 	vdb.close()
@@ -198,4 +199,11 @@ fn test__mixed_types_json() {
 	assert score == json2.Any(95.5)
 	// Verify boolean was retrieved
 	assert active != json2.Any(json2.null)
+}
+
+fn database_path() string {
+    if os.exists('src/testdata/test.db') {
+        return 'src/testdata/test.db'
+    }
+    return 'testdata/test.db'
 }
